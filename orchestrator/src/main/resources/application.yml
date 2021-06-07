@@ -26,9 +26,12 @@ logging:
 
 orchestrator:
   topics:
-    order-created: br.com.concrete.order_created_v1
     booking-create: br.com.concrete.booking_create_v1
     booking-result: br.com.concrete.booking_result_v1
+    booking-cancel: br.com.concrete.booking_cancel_v1
+    booking-confirm: br.com.concrete.booking_confirm_v1
+    order-created: br.com.concrete.order_created_v1
     order-cancel: br.com.concrete.order_cancel_v1
+    order-confirm: br.com.concrete.order_confirm_v1
     account-withdraw: br.com.concrete.account_withdraw_v1
     account-withdraw-result: br.com.concrete.account_withdraw_result_v1

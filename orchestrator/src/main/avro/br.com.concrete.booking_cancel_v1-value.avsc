@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "AccountWithdrawResult",
+  "name": "BookingCancel",
   "namespace": "br.com.concrete",
   "fields": [
     {
@@ -8,20 +8,12 @@
       "type": "string"
     },
     {
-      "name": "accountId",
-      "type": "string"
-    },
-    {
-      "name": "amount",
-      "type": "double"
-    },
-    {
       "name": "roomNumber",
       "type": "int"
     },
     {
       "name": "status",
-      "type": "br.com.concrete.AccountWithdrawStatus"
+      "type": "br.com.concrete.BookingStatus"
     },
     {
       "name": "message",

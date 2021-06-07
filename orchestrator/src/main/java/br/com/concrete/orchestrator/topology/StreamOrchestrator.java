@@ -2,10 +2,15 @@ package br.com.concrete.orchestrator.topology;
 
 import br.com.concrete.AccountWithdraw;
 import br.com.concrete.AccountWithdrawResult;
+import br.com.concrete.BookingCancel;
+import br.com.concrete.BookingConfirm;
 import br.com.concrete.BookingCreate;
 import br.com.concrete.BookingResult;
+import br.com.concrete.BookingStatus;
 import br.com.concrete.OrderCancel;
+import br.com.concrete.OrderConfirm;
 import br.com.concrete.OrderCreated;
+import br.com.concrete.OrderStatus;
 import br.com.concrete.orchestrator.infrastructure.configuration.TopicConfiguration;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
@@ -46,26 +51,25 @@ public class StreamOrchestrator {
 
     @Bean
     public Topology buildTopology() {
+        // Get pending orders flow
         KStream<String, OrderCreated> orderPendingStream = buildOrderPendingStream(streamsBuilder);
         buildBookingCreateStream(orderPendingStream);
 
+        // Booking flow
         KStream<String, BookingResult>[] bookingResultStream = buildBookingResultStream(streamsBuilder);
-        KStream<String, BookingResult> bookingResultErrorsStream = bookingResultStream[0];
+        KStream<String, BookingResult> bookingResultErrorStream = bookingResultStream[0];
+        buildOrderCancelStreamForBookingError(bookingResultErrorStream);
         KStream<String, BookingResult> bookingResultSuccessStream = bookingResultStream[1];
-        buildOrderCancelStream(bookingResultErrorsStream);
         buildAccountWithdrawStream(bookingResultSuccessStream);
 
+        // Payment flow
         KStream<String, AccountWithdrawResult>[] accountWithdrawResultStream = buildAccountWithdrawResultStream(streamsBuilder);
         KStream<String, AccountWithdrawResult> accountWithdrawResultStreamDenied = accountWithdrawResultStream[0];
+        buildOrderCancelStreamForPaymentDenied(accountWithdrawResultStreamDenied);
+        buildBookingCancelStream(accountWithdrawResultStreamDenied);
         KStream<String, AccountWithdrawResult> accountWithdrawResultStreamApproved = accountWithdrawResultStream[1];
-
-        /*
-        buildOrderCancelStream
-        buildBookingCancelStream
-
-        buildOrderConfirmStream
-        buildBookingConfirmStream
-         */
+        buildOrderConfirmStream(accountWithdrawResultStreamApproved);
+        buildBookingConfirmStream(accountWithdrawResultStreamApproved);
 
         return streamsBuilder.build();
     }
@@ -129,12 +133,25 @@ public class StreamOrchestrator {
         return bookingResultStreamBranches;
     }
 
-    private void buildOrderCancelStream(KStream<String, BookingResult> bookingResultErrorsStream) {
+    private void buildOrderCancelStreamForBookingError(KStream<String, BookingResult> bookingResultErrorsStream) {
         KStream<String, OrderCancel> orderCancelStream = bookingResultErrorsStream
             .mapValues(
                 (value) -> new OrderCancel(value.getOrderId(), CANCEL, value.getErrorMessage())
             );
 
+        materializeOrderCancelStream(orderCancelStream);
+    }
+
+    private void buildOrderCancelStreamForPaymentDenied(KStream<String, AccountWithdrawResult> accountWithdrawResultErrorStream) {
+        KStream<String, OrderCancel> orderCancelStream = accountWithdrawResultErrorStream
+            .mapValues(
+                (value) -> new OrderCancel(value.getOrderId(), CANCEL, value.getMessage())
+            );
+
+        materializeOrderCancelStream(orderCancelStream);
+    }
+
+    private void materializeOrderCancelStream(KStream<String, OrderCancel> orderCancelStream) {
         orderCancelStream.foreach(
             (key, value) -> logger.info("Requesting cancel order " + value)
         );
@@ -188,5 +205,53 @@ public class StreamOrchestrator {
         );
 
         return accountWithdrawResultStreamBranches;
+    }
+
+    private void buildBookingCancelStream(KStream<String, AccountWithdrawResult> accountWithdrawResultErrorStream) {
+        KStream<String, BookingCancel> bookingCancelStream = accountWithdrawResultErrorStream
+            .mapValues(
+                (value) -> new BookingCancel(value.getOrderId(), value.getRoomNumber(), BookingStatus.CANCEL, value.getMessage())
+            );
+
+        bookingCancelStream.foreach(
+            (key, value) -> logger.info("Requesting cancel booking " + value)
+        );
+
+        bookingCancelStream.to(
+            topicConfiguration.getBookingCancelTopic(),
+            Produced.with(String(), serdeConfiguration.configure())
+        );
+    }
+
+    private void buildOrderConfirmStream(KStream<String, AccountWithdrawResult> accountWithdrawResultStreamApproved) {
+        KStream<String, OrderConfirm> orderConfirmStream = accountWithdrawResultStreamApproved
+            .mapValues(
+                (value) -> new OrderConfirm(value.getOrderId(), value.getRoomNumber(), OrderStatus.CONFIRM)
+            );
+
+        orderConfirmStream.foreach(
+            (key, value) -> logger.info("Requesting confirm order " + value)
+        );
+
+        orderConfirmStream.to(
+            topicConfiguration.getOrderConfirmTopic(),
+            Produced.with(String(), serdeConfiguration.configure())
+        );
+    }
+
+    private void buildBookingConfirmStream(KStream<String, AccountWithdrawResult> accountWithdrawResultStreamApproved) {
+        KStream<String, BookingConfirm> orderConfirmStream = accountWithdrawResultStreamApproved
+            .mapValues(
+                (value) -> new BookingConfirm(value.getOrderId(), value.getRoomNumber(), BookingStatus.CONFIRM)
+            );
+
+        orderConfirmStream.foreach(
+            (key, value) -> logger.info("Requesting confirm order " + value)
+        );
+
+        orderConfirmStream.to(
+            topicConfiguration.getBookingConfirmTopic(),
+            Produced.with(String(), serdeConfiguration.configure())
+        );
     }
 }
