@@ -1,0 +1,27 @@
+{
+  "type": "record",
+  "name": "AccountWithdrawResult",
+  "namespace": "br.com.concrete",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "accountId",
+      "type": "string"
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "status",
+      "type": "br.com.concrete.AccountWithdrawStatus"
+    },
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ]
+}

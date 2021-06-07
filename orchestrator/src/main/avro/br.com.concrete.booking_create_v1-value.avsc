@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "BookingCreate",
+  "namespace": "br.com.concrete",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "roomNumber",
+      "type": "int"
+    },
+    {
+      "name": "status",
+      "type": "br.com.concrete.BookingStatus"
+    }
+  ]
+}

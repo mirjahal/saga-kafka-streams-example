@@ -1,0 +1,1 @@
+{"type":"enum","name":"BookingStatus","namespace":"br.com.concrete","symbols":["CANCEL","CONFIRM","RESERVE"]}

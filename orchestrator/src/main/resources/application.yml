@@ -1,0 +1,34 @@
+spring:
+  kafka:
+    consumer:
+      properties:
+        "spring.json.trusted.packages": "*"
+    streams:
+      bootstrap-servers:
+        - 127.0.0.1:9092
+      application-id: orchestrator
+      default:
+        key:
+          serde: org.apache.kafka.common.serialization.Serdes.StringSerde
+        value:
+          serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+    properties:
+      security:
+        protocol: "PLAINTEXT"
+      schema:
+        registry:
+          url: "http://127.0.0.1:8081"
+
+logging:
+  level:
+    io.confluent.kafka: "error"
+    org.apache.kafka: "error"
+
+orchestrator:
+  topics:
+    order-created: br.com.concrete.order_created_v1
+    booking-create: br.com.concrete.booking_create_v1
+    booking-result: br.com.concrete.booking_result_v1
+    order-cancel: br.com.concrete.order_cancel_v1
+    account-withdraw: br.com.concrete.account_withdraw_v1
+    account-withdraw-result: br.com.concrete.account_withdraw_result_v1

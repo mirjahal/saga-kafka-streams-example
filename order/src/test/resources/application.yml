@@ -1,0 +1,28 @@
+spring:
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    consumer:
+      group-id: order
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: br.com.concrete.order.infrastructure.configuration.CustomKafkaAvroDeserializer
+      properties:
+        specific.avro.reader: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: br.com.concrete.order.infrastructure.configuration.CustomKafkaAvroSerializer
+    properties:
+      security:
+        protocol: "PLAINTEXT"
+      schema:
+        registry:
+          url: not-used
+
+logging:
+  level:
+    io.confluent.kafka: "error"
+    org.apache.kafka: "error"
+
+order:
+  topics:
+    order-created: test

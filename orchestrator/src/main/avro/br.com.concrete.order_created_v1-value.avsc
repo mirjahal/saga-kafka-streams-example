@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "OrderCreated",
+  "namespace": "br.com.concrete",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "roomNumber",
+      "type": "int"
+    },
+    {
+      "name": "status",
+      "type": "br.com.concrete.OrderStatus"
+    }
+  ]
+}

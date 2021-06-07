@@ -1,0 +1,1 @@
+{"type":"record","name":"OrderCancel","namespace":"br.com.concrete","fields":[{"name":"orderId","type":"string"},{"name":"status","type":"string"},{"name":"errorMessage","type":"string"}]}

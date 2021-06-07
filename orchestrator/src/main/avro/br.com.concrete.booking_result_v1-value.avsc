@@ -1,0 +1,27 @@
+{
+  "type": "record",
+  "name": "BookingResult",
+  "namespace": "br.com.concrete",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "roomNumber",
+      "type": "int"
+    },
+    {
+      "name": "status",
+      "type": "br.com.concrete.BookingStatus"
+    },
+    {
+      "name": "price",
+      "type": "double"
+    },
+    {
+      "name": "errorMessage",
+      "type": ["null", "string"]
+    }
+  ]
+}

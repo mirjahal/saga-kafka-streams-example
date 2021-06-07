@@ -1,0 +1,51 @@
+server:
+  port: 8086
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:payment_db
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: create
+    properties:
+      hibernate.show_sql: false
+      hibernate.format_sql: false
+
+  kafka:
+    bootstrap-servers:
+      - 127.0.0.1:9092
+    consumer:
+      group-id: payment
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        specific.avro.reader: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+    properties:
+      security:
+        protocol: "PLAINTEXT"
+      schema:
+        registry:
+          url: "http://127.0.0.1:8081"
+
+logging:
+  level:
+    io.confluent.kafka: "error"
+    org.apache.kafka: "error"
+
+payment:
+  topics:
+    account-withdraw: br.com.concrete.account_withdraw_v1
+    account-withdraw-result: br.com.concrete.account_withdraw_result_v1

@@ -1,0 +1,49 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'com.github.imflog.kafka-schema-registry-gradle-plugin' version '1.2.0'
+	id 'com.github.davidmc24.gradle.plugin.avro' version '1.2.0'
+}
+
+group = 'br.com.concrete'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	maven {
+		url = uri('https://packages.confluent.io/maven/')
+	}
+	gradlePluginPortal()
+	mavenCentral()
+}
+
+schemaRegistry {
+	url = 'http://localhost:8081'
+
+	download {
+		subject('br.com.concrete.booking_status_v1-value', 'src/main/avro')
+		subject('br.com.concrete.booking_create_v1-value', 'src/main/avro')
+		subject('br.com.concrete.booking_result_v1-value', 'src/main/avro')
+	}
+}
+
+avro {
+	fieldVisibility = "PRIVATE"
+	stringType = "CharSequence"
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.apache.avro:avro:1.10.2'
+	implementation 'io.confluent:kafka-avro-serializer:6.1.1'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
+
+test {
+	useJUnitPlatform()
+}
