@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import javax.inject.Named;
 
 @Named
-    public class StreamTopology {
+public class StreamTopology {
 
     private final StreamsBuilder streamsBuilder;
     private final PendingOrdersStreamBuilder pendingOrdersStreamBuilder;
