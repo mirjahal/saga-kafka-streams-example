@@ -44,8 +44,6 @@ schemaRegistry {
 		subject('br.com.concrete.booking_status_v1-value', 'src/main/avro/br.com.concrete.booking_status_v1-value.avsc', 'AVRO')
 		subject('br.com.concrete.account_withdraw_status_v1-value', 'src/main/avro/br.com.concrete.account_withdraw_status_v1-value.avsc', 'AVRO')
 		subject('br.com.concrete.account_withdraw_v1-value', 'src/main/avro/br.com.concrete.account_withdraw_v1-value.avsc', 'AVRO')
-		subject('br.com.concrete.booking_confirm_v1-value', 'src/main/avro/br.com.concrete.booking_confirm_v1-value.avsc', 'AVRO')
-		subject('br.com.concrete.order_confirm_v1-value', 'src/main/avro/br.com.concrete.order_confirm_v1-value.avsc', 'AVRO')
 		subject('br.com.concrete.order_created_v1-value', 'src/main/avro/br.com.concrete.order_created_v1-value.avsc', 'AVRO')
 			.addReference('br.com.concrete.order_status_v1-value', 'br.com.concrete.order_status_v1-value', 1)
 		subject('br.com.concrete.order_cancel_v1-value', 'src/main/avro/br.com.concrete.order_cancel_v1-value.avsc', 'AVRO')
@@ -58,7 +56,10 @@ schemaRegistry {
 			.addReference('br.com.concrete.account_withdraw_status_v1-value', 'br.com.concrete.account_withdraw_status_v1-value', 1)
 		subject('br.com.concrete.booking_cancel_v1-value', 'src/main/avro/br.com.concrete.booking_cancel_v1-value.avsc', 'AVRO')
 			.addReference('br.com.concrete.booking_status_v1-value', 'br.com.concrete.booking_status_v1-value', 1)
-
+		subject('br.com.concrete.order_confirm_v1-value', 'src/main/avro/br.com.concrete.order_confirm_v1-value.avsc', 'AVRO')
+			.addReference('br.com.concrete.order_status_v1-value', 'br.com.concrete.order_status_v1-value', 1)
+		subject('br.com.concrete.booking_confirm_v1-value', 'src/main/avro/br.com.concrete.booking_confirm_v1-value.avsc', 'AVRO')
+			.addReference('br.com.concrete.booking_status_v1-value', 'br.com.concrete.booking_status_v1-value', 1)
 	}
 }
 

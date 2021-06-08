@@ -1,4 +1,4 @@
-package br.com.concrete.orchestrator.topology;
+package br.com.concrete.orchestrator.topology.configuration;
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.avro.specific.SpecificRecord;
