@@ -26,17 +26,17 @@ schemaRegistry {
 
 	download {
 		subject('br.com.concrete.order_status_v1-value', 'src/main/avro')
-		subject('br.com.concrete.booking_status_v1-value', 'src/main/avro')
-		subject('br.com.concrete.account_withdraw_status_v1-value', 'src/main/avro')
 		subject('br.com.concrete.order_created_v1-value', 'src/main/avro')
+		subject('br.com.concrete.order_cancel_v1-value', 'src/main/avro')
+		subject('br.com.concrete.order_confirm_v1-value', 'src/main/avro')
+		subject('br.com.concrete.booking_status_v1-value', 'src/main/avro')
 		subject('br.com.concrete.booking_create_v1-value', 'src/main/avro')
 		subject('br.com.concrete.booking_result_v1-value', 'src/main/avro')
-		subject('br.com.concrete.order_cancel_v1-value', 'src/main/avro')
-		subject('br.com.concrete.account_withdraw_v1-value', 'src/main/avro')
-		subject('br.com.concrete.account_withdraw_result_v1-value', 'src/main/avro')
 		subject('br.com.concrete.booking_cancel_v1-value', 'src/main/avro')
 		subject('br.com.concrete.booking_confirm_v1-value', 'src/main/avro')
-		subject('br.com.concrete.order_confirm_v1-value', 'src/main/avro')
+		subject('br.com.concrete.account_withdraw_status_v1-value', 'src/main/avro')
+		subject('br.com.concrete.account_withdraw_v1-value', 'src/main/avro')
+		subject('br.com.concrete.account_withdraw_result_v1-value', 'src/main/avro')
 	}
 
 	register {

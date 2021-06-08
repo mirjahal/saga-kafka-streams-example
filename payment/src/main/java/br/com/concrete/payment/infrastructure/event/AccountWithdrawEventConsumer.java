@@ -4,6 +4,7 @@ import br.com.concrete.AccountWithdraw;
 import br.com.concrete.AccountWithdrawResult;
 import br.com.concrete.payment.domain.business.UpdateBalance;
 import br.com.concrete.payment.domain.event.EventConsumer;
+import br.com.concrete.payment.domain.event.EventProducer;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import javax.inject.Named;
@@ -16,14 +17,14 @@ import static br.com.concrete.AccountWithdrawStatus.DENIED;
 public class AccountWithdrawEventConsumer implements EventConsumer<AccountWithdraw> {
 
     private final UpdateBalance updateBalance;
-    private final AccountWithdrawResultEventProducer accountWithdrawResultEventProducer;
+    private final EventProducer<AccountWithdrawResult> eventProducer;
 
     public AccountWithdrawEventConsumer(
         UpdateBalance updateBalance,
-        AccountWithdrawResultEventProducer accountWithdrawResultEventProducer
+        AccountWithdrawResultEventProducer eventProducer
     ) {
         this.updateBalance = updateBalance;
-        this.accountWithdrawResultEventProducer = accountWithdrawResultEventProducer;
+        this.eventProducer = eventProducer;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class AccountWithdrawEventConsumer implements EventConsumer<AccountWithdr
             accountWithdrawResult.setStatus(DENIED);
             accountWithdrawResult.setMessage(runtimeException.getMessage());
         } finally {
-            accountWithdrawResultEventProducer.produce(accountWithdrawResult);
+            eventProducer.produce(accountWithdrawResult);
         }
     }
 }

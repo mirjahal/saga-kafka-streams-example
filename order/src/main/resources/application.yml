@@ -49,3 +49,4 @@ order:
   topics:
     order-created: br.com.concrete.order_created_v1
     order-cancel: br.com.concrete.order_cancel_v1
+    order-confirm: br.com.concrete.order_confirm_v1

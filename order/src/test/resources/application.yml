@@ -26,3 +26,4 @@ logging:
 order:
   topics:
     order-created: test
+    order-cancel: test-cancel

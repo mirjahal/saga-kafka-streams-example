@@ -12,8 +12,9 @@ import javax.inject.Named;
 import java.util.Optional;
 import java.util.UUID;
 
+import static br.com.concrete.BookingStatus.ERROR;
+import static br.com.concrete.BookingStatus.RESERVE;
 import static br.com.concrete.booking.domain.entity.enums.RoomStatus.FREE;
-import static br.com.concrete.booking.domain.entity.enums.RoomStatus.RESERVE;
 
 @Named
 public class ReserveRoomImpl implements ReserveRoom {
@@ -29,7 +30,11 @@ public class ReserveRoomImpl implements ReserveRoom {
         Optional<Room> optionalRoom = roomRepository.findById(bookingCreate.getRoomNumber());
         if (!optionalRoom.isPresent()) {
             return new BookingResult(
-                null, null, null, null, "There is no room with room number."
+                bookingCreate.getOrderId().toString(),
+                bookingCreate.getRoomNumber(),
+                ERROR,
+                null,
+                "There is no room with room number."
             );
         }
 
@@ -43,16 +48,16 @@ public class ReserveRoomImpl implements ReserveRoom {
             return new BookingResult(
                 room.getOrderId().toString(),
                 room.getRoomNumber(),
-                BookingStatus.RESERVE,
+                RESERVE,
                 room.getPrice(),
-                null
+                "Success"
             );
         }
 
         return new BookingResult(
             bookingCreate.getOrderId().toString(),
             bookingCreate.getRoomNumber(),
-            bookingCreate.getStatus(),
+            ERROR,
             room.getPrice(),
             "The room is not available."
         );

@@ -25,6 +25,8 @@ schemaRegistry {
 		subject('br.com.concrete.booking_status_v1-value', 'src/main/avro')
 		subject('br.com.concrete.booking_create_v1-value', 'src/main/avro')
 		subject('br.com.concrete.booking_result_v1-value', 'src/main/avro')
+		subject('br.com.concrete.booking_cancel_v1-value', 'src/main/avro')
+		subject('br.com.concrete.booking_confirm_v1-value', 'src/main/avro')
 	}
 }
 

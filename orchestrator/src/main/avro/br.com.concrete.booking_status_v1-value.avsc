@@ -5,6 +5,7 @@
   "symbols": [
     "CANCEL",
     "CONFIRM",
+    "ERROR",
     "RESERVE"
   ]
 }

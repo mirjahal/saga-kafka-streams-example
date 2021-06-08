@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "OrderCancel",
+  "name": "OrderConfirm",
   "namespace": "br.com.concrete",
   "fields": [
     {
@@ -8,12 +8,12 @@
       "type": "string"
     },
     {
-      "name": "status",
-      "type": "br.com.concrete.OrderStatus"
+      "name": "roomNumber",
+      "type": "int"
     },
     {
-      "name": "errorMessage",
-      "type": "string"
+      "name": "status",
+      "type": "br.com.concrete.OrderStatus"
     }
   ]
 }

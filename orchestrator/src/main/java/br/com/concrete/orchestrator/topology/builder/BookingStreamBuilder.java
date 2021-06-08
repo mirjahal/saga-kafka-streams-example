@@ -15,12 +15,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 
+import static br.com.concrete.BookingStatus.ERROR;
 import static br.com.concrete.BookingStatus.RESERVE;
 import static br.com.concrete.OrderStatus.CANCEL;
 import static org.apache.kafka.common.serialization.Serdes.String;
 
 @Named
 public class BookingStreamBuilder {
+
+    private static final String ACCOUNT_ID = "304648ff-6efa-4a75-81f3-d7718d06b2a5";
 
     private final SerdeConfiguration serdeConfiguration;
     private final TopicConfiguration topicConfiguration;
@@ -47,8 +50,8 @@ public class BookingStreamBuilder {
             Consumed.with(String(), serdeConfiguration.configure())
         );
 
-        Predicate<String, BookingResult> bookingErrors = (key, value) -> value.getErrorMessage() != null;
-        Predicate<String, BookingResult> bookingSuccess =  (key, value) -> value.getStatus().toString().equals(RESERVE.name());
+        Predicate<String, BookingResult> bookingErrors = (key, value) -> value.getStatus() == ERROR;
+        Predicate<String, BookingResult> bookingSuccess =  (key, value) -> value.getStatus() == RESERVE;
 
         KStream<String, BookingResult>[] bookingResultStreamBranches = bookingResultStream.branch(
             bookingErrors,
@@ -68,11 +71,11 @@ public class BookingStreamBuilder {
     private void buildOrderCancelStreamForBookingError(KStream<String, BookingResult> bookingResultErrorsStream) {
         KStream<String, OrderCancel> orderCancelStream = bookingResultErrorsStream
             .mapValues(
-                (value) -> new OrderCancel(value.getOrderId(), CANCEL, value.getErrorMessage())
+                (value) -> new OrderCancel(value.getOrderId(), CANCEL, value.getMessage())
             );
 
         orderCancelStream.foreach(
-            (key, value) -> logger.info("Requesting cancel order " + value)
+            (key, value) -> logger.info("Requesting CANCEL order " + value)
         );
 
         orderCancelStream.to(
@@ -85,7 +88,7 @@ public class BookingStreamBuilder {
         KStream<String, AccountWithdraw> accountWithdrawStream = bookingResultSuccessStream
             .mapValues((value) -> {
                 AccountWithdraw accountWithdraw = new AccountWithdraw();
-                accountWithdraw.setAccountId("304648ff-6efa-4a75-81f3-d7718d06b2a5");
+                accountWithdraw.setAccountId(ACCOUNT_ID);
                 accountWithdraw.setOrderId(value.getOrderId());
                 accountWithdraw.setAmount(value.getPrice());
 

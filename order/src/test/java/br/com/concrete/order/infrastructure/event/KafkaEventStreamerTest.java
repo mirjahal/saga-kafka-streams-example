@@ -1,8 +1,9 @@
 package br.com.concrete.order.infrastructure.event;
 
 import br.com.concrete.OrderCreated;
+import br.com.concrete.OrderStatus;
 import br.com.concrete.order.domain.entity.Order;
-import br.com.concrete.order.domain.event.EventStreamable;
+import br.com.concrete.order.domain.event.EventProducer;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.AfterEach;
@@ -32,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class KafkaEventStreamerTest {
 
     @Autowired private EmbeddedKafkaBroker embeddedKafkaBroker;
-    @Autowired private EventStreamable eventStreamable;
+    @Autowired private EventProducer<OrderCreated> eventProducer;
     private Consumer<String, OrderCreated> consumer;
     static final String TOPIC = "test";
 
@@ -54,7 +55,12 @@ public class KafkaEventStreamerTest {
     void produceOrderCreatedEvent() {
         Order order = new Order(UUID.randomUUID(), PENDING, now());
 
-        eventStreamable.produceOrderCreatedEvent(102, order);
+        OrderCreated orderCreated = new OrderCreated(
+            order.getId().toString(),
+            102,
+            OrderStatus.PENDING
+        );
+        eventProducer.produce(orderCreated);
 
         ConsumerRecord<String, OrderCreated> record = KafkaTestUtils.getSingleRecord(consumer, TOPIC);
         assertThat(record).isNotNull();

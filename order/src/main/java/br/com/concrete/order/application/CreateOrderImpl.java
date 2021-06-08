@@ -1,8 +1,10 @@
 package br.com.concrete.order.application;
 
+import br.com.concrete.OrderCreated;
+import br.com.concrete.OrderStatus;
 import br.com.concrete.order.domain.business.CreateOrder;
 import br.com.concrete.order.domain.entity.Order;
-import br.com.concrete.order.domain.event.EventStreamable;
+import br.com.concrete.order.domain.event.EventProducer;
 import br.com.concrete.order.domain.repository.OrderRepository;
 
 import javax.inject.Named;
@@ -15,19 +17,24 @@ import static java.util.UUID.randomUUID;
 public class CreateOrderImpl implements CreateOrder {
 
     private final OrderRepository orderRepository;
-    private final EventStreamable eventStreamable;
+    private final EventProducer<OrderCreated> eventProducer;
 
-    public CreateOrderImpl(OrderRepository orderRepository, EventStreamable eventStreamable) {
+    public CreateOrderImpl(OrderRepository orderRepository, EventProducer<OrderCreated> eventProducer) {
         this.orderRepository = orderRepository;
-        this.eventStreamable = eventStreamable;
+        this.eventProducer = eventProducer;
     }
 
     @Override
     public Order create(int roomNumber) {
-        Order orderCreated = orderRepository.save(new Order(randomUUID(), PENDING, now()));
+        Order order = orderRepository.save(new Order(randomUUID(), PENDING, now()));
 
-        eventStreamable.produceOrderCreatedEvent(roomNumber, orderCreated);
+        OrderCreated orderCreated = new OrderCreated(
+            order.getId().toString(),
+            roomNumber,
+            OrderStatus.PENDING
+        );
+        eventProducer.produce(orderCreated);
 
-        return orderCreated;
+        return order;
     }
 }

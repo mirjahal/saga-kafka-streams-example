@@ -22,8 +22,10 @@ schemaRegistry {
 	url = 'http://localhost:8081'
 
 	download {
+		subject('br.com.concrete.order_status_v1-value', 'src/main/avro')
 		subject('br.com.concrete.order_created_v1-value', 'src/main/avro')
 		subject('br.com.concrete.order_cancel_v1-value', 'src/main/avro')
+		subject('br.com.concrete.order_confirm_v1-value', 'src/main/avro')
 	}
 }
 

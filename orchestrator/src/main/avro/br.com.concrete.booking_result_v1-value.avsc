@@ -20,7 +20,7 @@
       "type": "double"
     },
     {
-      "name": "errorMessage",
+      "name": "message",
       "type": ["null", "string"]
     }
   ]

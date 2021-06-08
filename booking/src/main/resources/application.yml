@@ -49,3 +49,5 @@ booking:
   topics:
     booking-create: br.com.concrete.booking_create_v1
     booking-result: br.com.concrete.booking_result_v1
+    booking-cancel: br.com.concrete.booking_cancel_v1
+    booking-confirm: br.com.concrete.booking_confirm_v1
