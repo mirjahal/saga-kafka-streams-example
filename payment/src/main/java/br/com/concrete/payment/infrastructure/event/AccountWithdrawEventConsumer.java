@@ -34,6 +34,7 @@ public class AccountWithdrawEventConsumer implements EventConsumer<AccountWithdr
         accountWithdrawResult.setAccountId(accountWithdraw.getAccountId());
         accountWithdrawResult.setOrderId(accountWithdraw.getOrderId());
         accountWithdrawResult.setAmount(accountWithdraw.getAmount());
+        accountWithdrawResult.setRoomNumber(accountWithdraw.getRoomNumber());
 
         try {
             UUID accountId = UUID.fromString(accountWithdraw.getAccountId().toString());

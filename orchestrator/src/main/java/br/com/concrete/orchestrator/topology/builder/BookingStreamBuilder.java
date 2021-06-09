@@ -92,6 +92,7 @@ public class BookingStreamBuilder {
                 AccountWithdraw accountWithdraw = new AccountWithdraw();
                 accountWithdraw.setAccountId(ACCOUNT_ID);
                 accountWithdraw.setOrderId(value.getOrderId());
+                accountWithdraw.setRoomNumber(value.getRoomNumber());
                 accountWithdraw.setAmount(value.getPrice());
 
                 return accountWithdraw;

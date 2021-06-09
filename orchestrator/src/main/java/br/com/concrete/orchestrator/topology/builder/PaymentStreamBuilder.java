@@ -129,7 +129,7 @@ public class PaymentStreamBuilder {
             );
 
         orderConfirmStream.foreach(
-            (key, value) -> logger.info("Requesting confirm order " + value)
+            (key, value) -> logger.info("Requesting confirm booking " + value)
         );
 
         orderConfirmStream.to(

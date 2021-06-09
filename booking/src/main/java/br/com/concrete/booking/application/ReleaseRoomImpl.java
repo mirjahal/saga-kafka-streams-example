@@ -25,6 +25,7 @@ public class ReleaseRoomImpl implements ReleaseRoom {
             .get();
 
         room.setStatus(FREE);
+        room.setOrderId(null);
 
         return roomRepository.save(room);
     }
