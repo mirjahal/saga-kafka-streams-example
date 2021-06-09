@@ -36,7 +36,7 @@ public class StreamTopology {
     public Topology buildTopology() {
         pendingOrdersStreamBuilder.build();
         bookingStreamBuilder.build();
-        //paymentStreamBuilder.build();
+        paymentStreamBuilder.build();
 
         return streamsBuilder.build();
     }
