@@ -5,6 +5,8 @@ import br.com.concrete.AccountWithdrawResult;
 import br.com.concrete.payment.domain.business.UpdateBalance;
 import br.com.concrete.payment.domain.event.EventConsumer;
 import br.com.concrete.payment.domain.event.EventProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import javax.inject.Named;
@@ -18,6 +20,7 @@ public class AccountWithdrawEventConsumer implements EventConsumer<AccountWithdr
 
     private final UpdateBalance updateBalance;
     private final EventProducer<AccountWithdrawResult> eventProducer;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public AccountWithdrawEventConsumer(
         UpdateBalance updateBalance,
@@ -30,6 +33,8 @@ public class AccountWithdrawEventConsumer implements EventConsumer<AccountWithdr
     @Override
     @KafkaListener(topics = "${payment.topics.account-withdraw}")
     public void consume(AccountWithdraw accountWithdraw) {
+        logger.info("Consuming account withdraw: " + accountWithdraw);
+
         AccountWithdrawResult accountWithdrawResult = new AccountWithdrawResult();
         accountWithdrawResult.setAccountId(accountWithdraw.getAccountId());
         accountWithdrawResult.setOrderId(accountWithdraw.getOrderId());
@@ -43,6 +48,8 @@ public class AccountWithdrawEventConsumer implements EventConsumer<AccountWithdr
             accountWithdrawResult.setStatus(APPROVED);
             accountWithdrawResult.setMessage("Success");
         } catch (RuntimeException runtimeException) {
+            logger.info("Exception when consuming account withdraw: " + runtimeException.getMessage());
+
             accountWithdrawResult.setStatus(DENIED);
             accountWithdrawResult.setMessage(runtimeException.getMessage());
         } finally {
