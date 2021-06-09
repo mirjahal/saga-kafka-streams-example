@@ -25,16 +25,18 @@ public class BookingStreamBuilder {
 
     private static final String ACCOUNT_ID = "304648ff-6efa-4a75-81f3-d7718d06b2a5";
 
+    private final StreamsBuilder streamsBuilder;
     private final SerdeConfiguration serdeConfiguration;
     private final TopicConfiguration topicConfiguration;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public BookingStreamBuilder(SerdeConfiguration serdeConfiguration, TopicConfiguration topicConfiguration) {
+    public BookingStreamBuilder(StreamsBuilder streamsBuilder, SerdeConfiguration serdeConfiguration, TopicConfiguration topicConfiguration) {
+        this.streamsBuilder = streamsBuilder;
         this.serdeConfiguration = serdeConfiguration;
         this.topicConfiguration = topicConfiguration;
     }
 
-    public void build(StreamsBuilder streamsBuilder) {
+    public void build() {
         KStream<String, BookingResult>[] bookingResultStream = buildBookingResultStream(streamsBuilder);
 
         KStream<String, BookingResult> bookingResultErrorStream = bookingResultStream[0];

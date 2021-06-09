@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
-import static java.util.Optional.ofNullable;
 
 @Named
 public class SerdeConfiguration {
@@ -31,7 +30,7 @@ public class SerdeConfiguration {
 
     private Map<String, String> getSerdeConfiguration() {
         final HashMap<String, String> map = new HashMap<>();
-        map.put(SCHEMA_REGISTRY_URL_CONFIG, ofNullable(schemaRegistryUrl).orElse(""));
+        map.put(SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
 
         return map;
     }

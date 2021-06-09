@@ -22,7 +22,9 @@ schemaRegistry {
 	url = 'http://localhost:8081'
 
 	download {
+		subject('br.com.concrete.account_withdraw_status_v1-value', 'src/main/avro')
 		subject('br.com.concrete.account_withdraw_v1-value', 'src/main/avro')
+		subject('br.com.concrete.account_withdraw_result_v1-value', 'src/main/avro')
 	}
 }
 

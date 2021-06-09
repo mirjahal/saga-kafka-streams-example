@@ -27,16 +27,18 @@ import static org.apache.kafka.common.serialization.Serdes.String;
 @Named
 public class PaymentStreamBuilder {
 
+    private final StreamsBuilder streamsBuilder;
     private final SerdeConfiguration serdeConfiguration;
     private final TopicConfiguration topicConfiguration;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public PaymentStreamBuilder(SerdeConfiguration serdeConfiguration, TopicConfiguration topicConfiguration) {
+    public PaymentStreamBuilder(StreamsBuilder streamsBuilder, SerdeConfiguration serdeConfiguration, TopicConfiguration topicConfiguration) {
+        this.streamsBuilder = streamsBuilder;
         this.serdeConfiguration = serdeConfiguration;
         this.topicConfiguration = topicConfiguration;
     }
 
-    public void build(StreamsBuilder streamsBuilder) {
+    public void build() {
         KStream<String, AccountWithdrawResult>[] accountWithdrawResultStream = buildAccountWithdrawResultStream(streamsBuilder);
 
         KStream<String, AccountWithdrawResult> accountWithdrawResultStreamDenied = accountWithdrawResultStream[0];

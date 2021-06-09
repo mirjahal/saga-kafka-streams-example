@@ -34,9 +34,9 @@ public class StreamTopology {
 
     @Bean
     public Topology buildTopology() {
-        pendingOrdersStreamBuilder.build(streamsBuilder);
-        bookingStreamBuilder.build(streamsBuilder);
-        paymentStreamBuilder.build(streamsBuilder);
+        pendingOrdersStreamBuilder.build();
+        bookingStreamBuilder.build();
+        //paymentStreamBuilder.build();
 
         return streamsBuilder.build();
     }

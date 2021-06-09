@@ -1,9 +1,1 @@
-{
-  "type": "enum",
-  "name": "AccountWithdrawStatus",
-  "namespace": "br.com.concrete",
-  "symbols": [
-    "APPROVED",
-    "DENIED"
-  ]
-}
+{"type":"enum","name":"AccountWithdrawStatus","namespace":"br.com.concrete","symbols":["APPROVED","DENIED"]}

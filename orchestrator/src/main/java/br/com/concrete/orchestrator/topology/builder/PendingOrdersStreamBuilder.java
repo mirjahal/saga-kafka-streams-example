@@ -20,16 +20,18 @@ import static org.apache.kafka.common.serialization.Serdes.String;
 @Named
 public class PendingOrdersStreamBuilder {
 
+    private final StreamsBuilder streamsBuilder;
     private final SerdeConfiguration serdeConfiguration;
     private final TopicConfiguration topicConfiguration;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public PendingOrdersStreamBuilder(SerdeConfiguration serdeConfiguration, TopicConfiguration topicConfiguration) {
+    public PendingOrdersStreamBuilder(StreamsBuilder streamsBuilder, SerdeConfiguration serdeConfiguration, TopicConfiguration topicConfiguration) {
+        this.streamsBuilder = streamsBuilder;
         this.serdeConfiguration = serdeConfiguration;
         this.topicConfiguration = topicConfiguration;
     }
 
-    public void build(StreamsBuilder streamsBuilder) {
+    public void build() {
         KStream<String, OrderCreated> orderPendingStream = buildOrderPendingStream(streamsBuilder);
         buildBookingCreateStream(orderPendingStream);
     }
