@@ -45,6 +45,19 @@ services:
     networks:
       - services-network
 
+  order:
+    build: order/
+    image: order
+    container_name: order
+    ports:
+      - 8089:8084
+    networks:
+      - services-network
+    depends_on:
+      - mongo
+    environment:
+      - DATABASE_HOST=mongo
+
 networks:
   services-network:
     driver: "bridge"
