@@ -27,3 +27,4 @@ order:
   topics:
     order-created: test
     order-cancel: test-cancel
+    order-confirm: test-confirm

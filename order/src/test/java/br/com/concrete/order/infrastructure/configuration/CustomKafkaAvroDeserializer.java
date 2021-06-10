@@ -18,6 +18,7 @@ public class CustomKafkaAvroDeserializer extends KafkaAvroDeserializer {
     private static SchemaRegistryClient getMockClient(final Schema schema$) {
         return new MockSchemaRegistryClient() {
             @Override
+            @SuppressWarnings("deprecation")
             public synchronized Schema getById(int id) {
                 return schema$;
             }
