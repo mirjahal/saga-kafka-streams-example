@@ -2,23 +2,11 @@ server:
   port: 8084
 
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:order_db
-    username: sa
-    password:
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate.ddl-auto: create
-    properties:
-      hibernate.show_sql: false
-      hibernate.format_sql: false
+  data:
+    mongodb:
+      host: ${DATABASE_HOST:localhost}
+      port: ${DATABASE_PORT:27017}
+      database: ${DATABASE_NAME:orders_db}
 
   kafka:
     bootstrap-servers:

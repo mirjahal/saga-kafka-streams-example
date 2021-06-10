@@ -1,15 +1,13 @@
 package br.com.concrete.order.domain.entity;
 
 import br.com.concrete.order.domain.entity.enums.OrderStatus;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "orders")
+@Document("orders")
 public class Order {
 
     @Id
