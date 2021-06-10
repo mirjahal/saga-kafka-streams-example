@@ -20,3 +20,31 @@ services:
       - "DISABLE_JMX=1"
       - "SUPERVISORWEB=1"
       - "ADV_HOST=127.0.0.1"
+    networks:
+      - services-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - services-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    depends_on:
+      - "mongo"
+    ports:
+      - 8181:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    networks:
+      - services-network
+
+networks:
+  services-network:
+    driver: "bridge"
