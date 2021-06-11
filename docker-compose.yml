@@ -45,18 +45,61 @@ services:
     networks:
       - services-network
 
+  mysql:
+    image: mysql:5.7.34
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=booking_db
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - 3306:3306
+    networks:
+      - services-network
+
+  phpmyadmin:
+    image: phpmyadmin:5.1.1
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - "mysql"
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+    networks:
+      - services-network
+
   order:
     build: order/
     image: order
     container_name: order
     ports:
-      - 8089:8084
+      - 8084:8084
     networks:
       - services-network
     depends_on:
       - mongo
     environment:
       - DATABASE_HOST=mongo
+
+  booking:
+    build: booking/
+    image: booking
+    container_name: booking
+    restart: on-failure
+    ports:
+      - 8085:8085
+    networks:
+      - services-network
+    depends_on:
+      - mysql
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_PORT=3306
 
 networks:
   services-network:

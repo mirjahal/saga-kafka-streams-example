@@ -3,13 +3,13 @@ server:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/booking_db
-    username: ${DATABASE_USERNAME:root}
-    password: ${DATABASE_PASSWORD:root}
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:booking_db
+    username: sa
+    password:
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create
     properties:
       hibernate.show_sql: false
@@ -35,14 +35,9 @@ spring:
         registry:
           url: "http://127.0.0.1:8081"
 
-logging:
-  level:
-    io.confluent.kafka: "error"
-    org.apache.kafka: "error"
-
 booking:
   topics:
-    booking-create: br.com.concrete.booking_create_v1
-    booking-result: br.com.concrete.booking_result_v1
-    booking-cancel: br.com.concrete.booking_cancel_v1
-    booking-confirm: br.com.concrete.booking_confirm_v1
+    booking-create: br.com.concrete.booking_create_v1_test
+    booking-result: br.com.concrete.booking_result_v1_test
+    booking-cancel: br.com.concrete.booking_cancel_v1_test
+    booking-confirm: br.com.concrete.booking_confirm_v1_test
