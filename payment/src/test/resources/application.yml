@@ -3,13 +3,13 @@ server:
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/payment_db
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:payment_db
+    username: sa
+    password:
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create
     properties:
       hibernate.show_sql: false
@@ -42,5 +42,5 @@ logging:
 
 payment:
   topics:
-    account-withdraw: br.com.concrete.account_withdraw_v1
-    account-withdraw-result: br.com.concrete.account_withdraw_result_v1
+    account-withdraw: br.com.concrete.account_withdraw_v1_test
+    account-withdraw-result: br.com.concrete.account_withdraw_result_v1_test
