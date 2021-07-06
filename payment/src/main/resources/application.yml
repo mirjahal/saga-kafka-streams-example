@@ -17,7 +17,7 @@ spring:
 
   kafka:
     bootstrap-servers:
-      - 127.0.0.1:9092
+      - ${KAFKA_URL:127.0.0.1:9092}
     consumer:
       group-id: payment
       auto-offset-reset: earliest
@@ -33,7 +33,7 @@ spring:
         protocol: "PLAINTEXT"
       schema:
         registry:
-          url: "http://127.0.0.1:8081"
+          url: ${SCHEMA_REGISTRY_URL:http://127.0.0.1:8081}
 
 logging:
   level:

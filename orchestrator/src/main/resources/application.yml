@@ -1,11 +1,8 @@
 spring:
   kafka:
-    consumer:
-      properties:
-        "spring.json.trusted.packages": "*"
+    bootstrap-servers:
+      - ${KAFKA_URL:127.0.0.1:9092}
     streams:
-      bootstrap-servers:
-        - 127.0.0.1:9092
       application-id: orchestrator
       default:
         key:
@@ -17,12 +14,7 @@ spring:
         protocol: "PLAINTEXT"
       schema:
         registry:
-          url: "http://127.0.0.1:8081"
-
-logging:
-  level:
-    io.confluent.kafka: "error"
-    org.apache.kafka: "error"
+          url: ${SCHEMA_REGISTRY_URL:http://127.0.0.1:8081}
 
 orchestrator:
   topics:

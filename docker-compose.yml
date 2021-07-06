@@ -19,59 +19,58 @@ services:
       - "RUNTESTS=0"
       - "DISABLE_JMX=1"
       - "SUPERVISORWEB=1"
-      - "ADV_HOST=127.0.0.1"
+      - "ADV_HOST=data_platform"
     networks:
       - services-network
 
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongo_saga
     restart: always
     ports:
       - "27017:27017"
     networks:
       - services-network
 
-  mongo-express:
-    image: mongo-express:latest
-    container_name: mongo-express
-    restart: always
-    depends_on:
-      - "mongo"
-    ports:
-      - 8181:8081
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo
-    networks:
-      - services-network
-
   mysql:
     image: mysql:5.7.34
-    container_name: mysql
+    container_name: mysql_saga
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=booking_db
-      - MYSQL_ROOT_HOST=%
     ports:
       - 3306:3306
     networks:
       - services-network
 
-  phpmyadmin:
-    image: phpmyadmin:5.1.1
-    container_name: phpmyadmin
+  postgres:
+    image: postgres:9.6.22-alpine
+    container_name: postgres_saga
     restart: always
-    depends_on:
-      - "mysql"
-    ports:
-      - 8080:80
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mysql
-      - PMA_PORT=3306
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=payment_db
+    ports:
+      - 5432:5432
     networks:
       - services-network
+
+  orchestrator:
+    build: orchestrator/
+    image: orchestrator
+    container_name: orchestrator
+    networks:
+      - services-network
+    depends_on:
+      - data_platform
+      - order
+      - booking
+      - payment
+    environment:
+      - KAFKA_URL=data_platform:9092
+      - SCHEMA_REGISTRY_URL=http://data_platform:8081
 
   order:
     build: order/
@@ -83,8 +82,11 @@ services:
       - services-network
     depends_on:
       - mongo
+      - data_platform
     environment:
       - DATABASE_HOST=mongo
+      - KAFKA_URL=data_platform:9092
+      - SCHEMA_REGISTRY_URL=http://data_platform:8081
 
   booking:
     build: booking/
@@ -97,9 +99,32 @@ services:
       - services-network
     depends_on:
       - mysql
+      - data_platform
     environment:
       - DATABASE_HOST=mysql
       - DATABASE_PORT=3306
+      - KAFKA_URL=data_platform:9092
+      - SCHEMA_REGISTRY_URL=http://data_platform:8081
+
+  payment:
+    build: payment/
+    image: payment
+    container_name: payment
+    restart: on-failure
+    ports:
+      - 8086:8086
+    networks:
+      - services-network
+    depends_on:
+      - postgres
+      - data_platform
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - KAFKA_URL=data_platform:9092
+      - SCHEMA_REGISTRY_URL=http://data_platform:8081
 
 networks:
   services-network:

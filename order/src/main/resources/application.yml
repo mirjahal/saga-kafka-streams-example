@@ -10,7 +10,7 @@ spring:
 
   kafka:
     bootstrap-servers:
-      - 127.0.0.1:9092
+      - ${KAFKA_URL:127.0.0.1:9092}
     consumer:
       group-id: order
       auto-offset-reset: earliest
@@ -26,12 +26,7 @@ spring:
         protocol: "PLAINTEXT"
       schema:
         registry:
-          url: "http://127.0.0.1:8081"
-
-logging:
-  level:
-    io.confluent.kafka: "error"
-    org.apache.kafka: "error"
+          url: ${SCHEMA_REGISTRY_URL:http://127.0.0.1:8081}
 
 order:
   topics:
